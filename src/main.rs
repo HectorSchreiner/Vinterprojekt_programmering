@@ -24,3 +24,24 @@ pub fn main() {
             .unwrap();
     }
 }
+
+fn inputHandle(window: &Window) {
+    let key: Key;
+
+    match key {
+        
+    }
+
+    if window.is_key_pressed(Key::W, minifb::KeyRepeat::No) {
+        //something
+    }
+    if window.is_key_pressed(Key::A, minifb::KeyRepeat::No) {
+        //something
+    }
+    if window.is_key_pressed(Key::S, minifb::KeyRepeat::No) {
+        //something
+    }
+    if window.is_key_pressed(Key::D, minifb::KeyRepeat::No) {
+        //something
+    }
+}

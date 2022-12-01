@@ -10,7 +10,7 @@ impl Renderer {
     pub fn pixel(&mut self, position: (usize, usize), color: (u8, u8, u8)) {
         if position.0 < WIDTH && position.0 > 0 && position.1 < HEIGHT && position.1 > 0 {
             self.buffer[position.0 + position.1 * WIDTH] =
-                tuple_to_rgb(color);
+                to_color(color);
         }
     }
 
@@ -21,7 +21,7 @@ impl Renderer {
         for y in pos_y..square.height + pos_y {
             for x in pos_x..square.lenght + pos_x {
                 self.buffer[(y * WIDTH as u32 + x) as usize] =
-                    tuple_to_rgb(color);
+                    to_color(color);
             }
         }
     }
@@ -40,7 +40,7 @@ impl Renderer {
 
     pub fn clear(&mut self, color: (u8, u8, u8)) {
         for iter in 0..HEIGHT * WIDTH {
-            self.buffer[iter] = tuple_to_rgb(color);
+            self.buffer[iter] = to_color(color);
         }
     }
 }

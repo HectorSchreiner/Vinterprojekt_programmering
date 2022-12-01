@@ -26,12 +26,6 @@ pub fn main() {
 }
 
 fn inputHandle(window: &Window) {
-    let key: Key;
-
-    match key {
-        
-    }
-
     if window.is_key_pressed(Key::W, minifb::KeyRepeat::No) {
         //something
     }

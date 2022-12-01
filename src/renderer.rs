@@ -2,26 +2,34 @@ use crate::shapes::*;
 use crate::utils::*;
 use line_drawing::Bresenham;
 
+pub fn to_color(color: (u8, u8, u8)) -> u32 {
+    let (r, g, b) = (color.0 as u32, color.1 as u32, color.2 as u32);
+    (r << 16) | (g << 8) | b
+}
+
 pub struct Renderer {
     pub buffer: Vec<u32>,
 }
 
 impl Renderer {
-    pub fn pixel(&mut self, position: (usize, usize), color: (u8, u8, u8)) {
-        if position.0 < WIDTH && position.0 > 0 && position.1 < HEIGHT && position.1 > 0 {
-            self.buffer[position.0 + position.1 * WIDTH] =
-                to_color(color);
+    pub fn pixel<T: Into<Position2D>>(&mut self, position: T, color: (u8, u8, u8)) {
+        let position = position.into();
+        let x = position.x as usize;
+        let y = position.y as usize;
+
+        if x < WIDTH && x > 0 && y < HEIGHT && y > 0 {
+            self.buffer[x + y * WIDTH] = to_color(color);
         }
     }
 
-    pub fn rect(&mut self, square: &Square, color: (u8, u8, u8)) {
+    pub fn rect<T: Into<Square>>(&mut self, square: T, color: (u8, u8, u8)) {
+        let square = square.into();
         let pos_y = square.position.y;
         let pos_x = square.position.x;
 
         for y in pos_y..square.height + pos_y {
             for x in pos_x..square.lenght + pos_x {
-                self.buffer[(y * WIDTH as u32 + x) as usize] =
-                    to_color(color);
+                self.buffer[(y * WIDTH as u32 + x) as usize] = to_color(color);
             }
         }
     }
@@ -31,10 +39,7 @@ impl Renderer {
             (line.pos_1.x as i32, line.pos_1.y as i32),
             (line.pos_2.x as i32, line.pos_2.y as i32),
         ) {
-            self.pixel(
-                (x as usize, y as usize),
-                (color.0, color.1, color.2),
-            );
+            self.pixel((x as u32, y as u32), (color.0, color.1, color.2));
         }
     }
 

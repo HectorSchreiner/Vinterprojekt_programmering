@@ -15,6 +15,7 @@ pub fn main() {
     };
 
     let mut window = Window::new("Doom", WIDTH, HEIGHT, WindowOptions::default()).unwrap();
+
     // Limit to max ~60 fps update rate
     window.limit_update_rate(Some(std::time::Duration::from_micros(16600)));
 
@@ -22,7 +23,13 @@ pub fn main() {
         window
             .update_with_buffer(&renderer.buffer, WIDTH, HEIGHT)
             .unwrap();
+            renderer.clear((120,120,120));
+
+            renderer.pixel(position, color);
+
+            renderer.rect((20, 20, (100, 100)), (200, 50, 0));
     }
+
 }
 
 fn inputHandle(window: &Window) {

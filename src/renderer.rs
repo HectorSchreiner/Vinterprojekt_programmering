@@ -1,6 +1,8 @@
 use crate::shapes::*;
-use crate::utils::*;
 use line_drawing::Bresenham;
+
+pub const WIDTH: usize = 600;
+pub const HEIGHT: usize = 600;
 
 pub fn to_color(color: (u8, u8, u8)) -> u32 {
     let (r, g, b) = (color.0 as u32, color.1 as u32, color.2 as u32);

@@ -2,12 +2,10 @@ pub use game::*;
 use minifb::*;
 pub use renderer::*;
 pub use shapes::*;
-pub use utils::*;
 
 mod game;
 mod renderer;
 mod shapes;
-mod utils;
 
 pub fn main() {
     let mut renderer: Renderer = Renderer {
@@ -23,16 +21,13 @@ pub fn main() {
         window
             .update_with_buffer(&renderer.buffer, WIDTH, HEIGHT)
             .unwrap();
-            renderer.clear((120,120,120));
 
-            renderer.pixel(position, color);
-
-            renderer.rect((20, 20, (100, 100)), (200, 50, 0));
+        renderer.clear((120, 120, 120));
+        game::Game::render_map(&mut renderer, 5, 8, 20);
     }
-
 }
 
-fn inputHandle(window: &Window) {
+fn input_handle(window: &Window) {
     if window.is_key_pressed(Key::W, minifb::KeyRepeat::No) {
         //something
     }

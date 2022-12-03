@@ -23,13 +23,9 @@ pub fn main() {
         window
             .update_with_buffer(&renderer.buffer, WIDTH, HEIGHT)
             .unwrap();
-            renderer.clear((120,120,120));
-
-            renderer.pixel(position, color);
-
-            renderer.rect((20, 20, (100, 100)), (200, 50, 0));
+        renderer.clear((120, 120, 120));
+        renderer.rect((20, 20, (100, 100)), (200, 50, 0));
     }
-
 }
 
 fn inputHandle(window: &Window) {

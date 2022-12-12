@@ -99,8 +99,23 @@ impl GameRenderer {
         }
     }
 
+    fn check_collision(self) {
+        // emil must do this  
+        
+        // Eksempel
+        let x1 = self.colliders[0].top_left_corner.x;
+        let y1 = self.colliders[0].top_left_corner.y;
+        let x2 = self.colliders[0].bottom_right_corner.x;
+        let y2 = self.colliders[0].bottom_right_corner.y;
+
+
+
+    }
+
     pub fn move_player(mut self, window: &Window) {
         let player_speed = 3;
+
+
 
         if window.is_key_pressed(Key::W, KeyRepeat::Yes) {
             self.player.position.y -= player_speed;
@@ -114,6 +129,8 @@ impl GameRenderer {
         if window.is_key_pressed(Key::D, KeyRepeat::Yes) {
             self.player.position.x += player_speed;
         }
+
+
     }
 
     pub fn render_player(&self, render_handle: &mut WindowRenderer) {

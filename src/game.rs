@@ -1,5 +1,5 @@
+use crate::Window;
 use crate::{initialize_map, renderer, shapes::*};
-use crate::{Window};
 use crate::{WindowRenderer, HEIGHT, WIDTH};
 use minifb::*;
 
@@ -71,26 +71,26 @@ impl GameRenderer {
         map_height: usize,
     ) {
         let spacing = 2;
-        let grid_width = map_width / self.rows;
-        let grid_height = map_height / self.cols;
+        let grid_width: i32 = map_width as i32 / self.rows as i32;
+        let grid_height: i32 = map_height as i32 / self.cols as i32;
 
         let wall_color = (40, 200, 200);
         let empty_color = (0, 0, 0);
 
-        for y in 0..self.cols {
-            for x in 0..self.rows {
-                let color = match self.map[(x + y * self.rows) as usize] {
+        for y in 0..(self.cols as i32) {
+            for x in 0..(self.rows as i32) {
+                let color = match self.map[(x + y * self.rows as i32) as usize] {
                     Block::Wall => wall_color,
                     Block::Empty => empty_color,
                 };
 
                 let cell =
-                    Square::from((grid_width, grid_height, (x * grid_width, y * grid_height)));
+                    Square::from((grid_width as usize, grid_height as usize, (x * grid_width, y * grid_height)));
                 render_handle.rect(cell, (0, 0, 0));
 
                 let spacing_cell = Square::from((
-                    grid_width - spacing,
-                    grid_height - spacing,
+                    (grid_width - spacing) as usize,
+                    (grid_height - spacing) as usize,
                     (spacing / 2 + x * grid_width, spacing / 2 + y * grid_height),
                 ));
 
@@ -100,37 +100,63 @@ impl GameRenderer {
     }
 
     fn check_collision(self) {
-        // emil must do this  
-        
+        // emil must do this
+
         // Eksempel
-        let x1 = self.colliders[0].top_left_corner.x;
-        let y1 = self.colliders[0].top_left_corner.y;
-        let x2 = self.colliders[0].bottom_right_corner.x;
-        let y2 = self.colliders[0].bottom_right_corner.y;
+        for i in self.colliders {
+            let x1 = i.top_left_corner.x;
+            let y1 = i.top_left_corner.y;
+            let x2 = i.bottom_right_corner.x;
+            let y2 = i.bottom_right_corner.y;
+        }
 
-
-
+        let player_pos_x = self.player.position.x;
+        let player_pos_y = self.player.position.y;
     }
 
-    pub fn move_player(mut self, window: &Window) {
-        let player_speed = 3;
+    pub fn move_player(&mut self, window: &Window) {
+        let player_speed = 3.0;
+        let rotation_speed = 0.1;
+        let mut direction_vec = vec![self.player.direction.sin(), self.player.direction.cos()];
 
-
-
+        // if self.player.direction < 0.0 {
+        //     self.player.direction = 2.0 * std::f32::consts::PI;
+        // }
+        // if self.player.direction >= 2.0 * std::f32::consts::PI {
+        //     self.player.direction = 0.0;
+        // }
         if window.is_key_pressed(Key::W, KeyRepeat::Yes) {
-            self.player.position.y -= player_speed;
-        }
-        if window.is_key_pressed(Key::A, KeyRepeat::Yes) {
-            self.player.position.x -= player_speed;
+            self.player.position.x -= (player_speed * direction_vec[0]) as i32;
+            self.player.position.y -= (player_speed * direction_vec[1]) as i32;
+
+            println!(
+                "direction{}, position X{} position Y{}",
+                self.player.direction, self.player.position.x, self.player.position.y
+            );
         }
         if window.is_key_pressed(Key::S, KeyRepeat::Yes) {
-            self.player.position.y += player_speed;
+            self.player.position.x += (player_speed * direction_vec[0]) as i32;
+            self.player.position.y += (player_speed * direction_vec[1]) as i32;
+            println!(
+                "direction{}, position X{} position Y{}",
+                self.player.direction, self.player.position.x, self.player.position.y
+            );
         }
+        if window.is_key_pressed(Key::A, KeyRepeat::Yes) {
+            self.player.direction += rotation_speed;
+            println!(
+                "direction{}, position X{} position Y{}",
+                self.player.direction, self.player.position.x, self.player.position.y
+            );
+        }
+
         if window.is_key_pressed(Key::D, KeyRepeat::Yes) {
-            self.player.position.x += player_speed;
+            self.player.direction -= rotation_speed;
+            println!(
+                "direction{}, position X{} position Y{}",
+                self.player.direction, self.player.position.x, self.player.position.y
+            );
         }
-
-
     }
 
     pub fn render_player(&self, render_handle: &mut WindowRenderer) {

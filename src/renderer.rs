@@ -27,22 +27,22 @@ impl WindowRenderer {
 
     pub fn rect<T: Into<Square>>(&mut self, square: T, color: (u8, u8, u8)) {
         let square = square.into();
-        let pos_y = square.position.y;
-        let pos_x = square.position.x;
+        let pos_y: i32 = square.position.y;
+        let pos_x: i32 = square.position.x;
 
-        for y in pos_y..square.height + pos_y {
-            for x in pos_x..square.length + pos_x {
-                self.buffer[(y * WIDTH + x)] = to_color(color);
+        for y in pos_y..square.height as i32 + pos_y {
+            for x in pos_x..square.length as i32 + pos_x {
+                self.buffer[(y * WIDTH as i32 + x) as usize] = to_color(color);
             }
         }
     }
 
     pub fn line(&mut self, line: &Line, color: (u8, u8, u8)) {
         for (x, y) in Bresenham::new(
-            (line.pos_1.x as isize, line.pos_1.y as isize),
-            (line.pos_2.x as isize, line.pos_2.y as isize),
+            (line.pos_1.x as i32, line.pos_1.y as i32),
+            (line.pos_2.x as i32, line.pos_2.y as i32),
         ) {
-            self.pixel((x as usize, y as usize), (color.0, color.1, color.2));
+            self.pixel((x, y), (color.0, color.1, color.2));
         }
     }
 

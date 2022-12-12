@@ -9,12 +9,12 @@ impl From<(u8, u8, u8)> for Color {
 }
 
 pub struct Position2D {
-    pub x: usize,
-    pub y: usize,
+    pub x: i32,
+    pub y: i32,
 }
 
-impl From<(usize, usize)> for Position2D {
-    fn from(position: (usize, usize)) -> Self {
+impl From<(i32, i32)> for Position2D {
+    fn from(position: (i32, i32)) -> Self {
         Self {
             x: position.0,
             y: position.1,

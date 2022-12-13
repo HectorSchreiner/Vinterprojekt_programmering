@@ -1,5 +1,5 @@
 use crate::Window;
-use crate::{initialize_map, renderer, shapes::*};
+use crate::{renderer, shapes::*};
 use crate::{WindowRenderer, HEIGHT, WIDTH};
 use minifb::*;
 
@@ -117,6 +117,21 @@ impl GameRenderer {
         let player_pos_y = self.player.position.y;
     }
 
+    pub fn render_player_vision(&self, render_handle: &mut WindowRenderer) {
+        let x = (self.player.position.x as f32 + self.player.size as f32 * 0.5) as i32;
+        let y = (self.player.position.y as f32 + self.player.size as f32 * 0.5) as i32;
+        let line_lenght = 20.0;
+        let line = Line::new(
+            (x, y),
+            (
+                x - (self.player.direction.sin() * line_lenght) as i32,
+                y - (self.player.direction.cos() * line_lenght) as i32,
+            ),
+        );
+
+        render_handle.line(&line, (250, 250, 0));
+    }
+
     pub fn move_player(&mut self, window: &Window) {
         let player_speed = 3.0;
         let rotation_speed = 0.1;
@@ -137,7 +152,7 @@ impl GameRenderer {
                 Key::A => {
                     self.player.direction += rotation_speed;
                 }
-                Key::B => {
+                Key::D => {
                     self.player.direction -= rotation_speed;
                 }
                 _ => {}
@@ -160,4 +175,23 @@ pub fn initialize_map_colliders() -> Vec<SquareCollider> {
     let mut collider_array: Vec<SquareCollider> = vec![];
     collider_array.push(SquareCollider::from(((0, 0), (100, 20))));
     return collider_array;
+}
+
+pub fn initialize_map() -> Vec<Block> {
+    let w = Block::Wall;
+    let e = Block::Empty;
+
+    #[rustfmt::skip]
+    let map = vec![
+        w, e, e, e, 
+        e, w, w, w,
+        e, e, e, e,
+        e, e, e, e,
+        e, e, e, e,
+        e, e, e, e,
+        e, e, e, e,
+        e, e, e, w,
+    ];
+
+    return map;
 }

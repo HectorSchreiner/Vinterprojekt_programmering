@@ -36,24 +36,6 @@ fn main() {
         game.render_map(&mut renderer, 100, 200);
         game.render_player(&mut renderer);
         game.move_player(&window);
+        game.render_player_vision(&mut renderer);
     }
-}
-
-fn initialize_map() -> Vec<Block> {
-    let w = Block::Wall;
-    let e = Block::Empty;
-
-    #[rustfmt::skip]
-    let map = vec![
-        w, e, e, e, 
-        e, w, w, w,
-        e, e, e, e,
-        e, e, e, e,
-        e, e, e, e,
-        e, e, e, e,
-        e, e, e, e,
-        e, e, e, w,
-    ];
-
-    return map;
 }

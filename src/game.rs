@@ -84,8 +84,11 @@ impl GameRenderer {
                     Block::Empty => empty_color,
                 };
 
-                let cell =
-                    Square::from((grid_width as usize, grid_height as usize, (x * grid_width, y * grid_height)));
+                let cell = Square::from((
+                    grid_width as usize,
+                    grid_height as usize,
+                    (x * grid_width, y * grid_height),
+                ));
                 render_handle.rect(cell, (0, 0, 0));
 
                 let spacing_cell = Square::from((
@@ -117,46 +120,28 @@ impl GameRenderer {
     pub fn move_player(&mut self, window: &Window) {
         let player_speed = 3.0;
         let rotation_speed = 0.1;
-        let mut direction_vec = vec![self.player.direction.sin(), self.player.direction.cos()];
+        let direction_vec = vec![self.player.direction.sin(), self.player.direction.cos()];
 
-        // if self.player.direction < 0.0 {
-        //     self.player.direction = 2.0 * std::f32::consts::PI;
-        // }
-        // if self.player.direction >= 2.0 * std::f32::consts::PI {
-        //     self.player.direction = 0.0;
-        // }
-        if window.is_key_pressed(Key::W, KeyRepeat::Yes) {
-            self.player.position.x -= (player_speed * direction_vec[0]) as i32;
-            self.player.position.y -= (player_speed * direction_vec[1]) as i32;
-
-            println!(
-                "direction{}, position X{} position Y{}",
-                self.player.direction, self.player.position.x, self.player.position.y
-            );
-        }
-        if window.is_key_pressed(Key::S, KeyRepeat::Yes) {
-            self.player.position.x += (player_speed * direction_vec[0]) as i32;
-            self.player.position.y += (player_speed * direction_vec[1]) as i32;
-            println!(
-                "direction{}, position X{} position Y{}",
-                self.player.direction, self.player.position.x, self.player.position.y
-            );
-        }
-        if window.is_key_pressed(Key::A, KeyRepeat::Yes) {
-            self.player.direction += rotation_speed;
-            println!(
-                "direction{}, position X{} position Y{}",
-                self.player.direction, self.player.position.x, self.player.position.y
-            );
-        }
-
-        if window.is_key_pressed(Key::D, KeyRepeat::Yes) {
-            self.player.direction -= rotation_speed;
-            println!(
-                "direction{}, position X{} position Y{}",
-                self.player.direction, self.player.position.x, self.player.position.y
-            );
-        }
+        window
+            .get_keys_pressed(KeyRepeat::Yes)
+            .iter()
+            .for_each(|key| match key {
+                Key::W => {
+                    self.player.position.x -= (player_speed * direction_vec[0]) as i32;
+                    self.player.position.y -= (player_speed * direction_vec[1]) as i32;
+                }
+                Key::S => {
+                    self.player.position.x += (player_speed * direction_vec[0]) as i32;
+                    self.player.position.y += (player_speed * direction_vec[1]) as i32;
+                }
+                Key::A => {
+                    self.player.direction += rotation_speed;
+                }
+                Key::B => {
+                    self.player.direction -= rotation_speed;
+                }
+                _ => {}
+            });
     }
 
     pub fn render_player(&self, render_handle: &mut WindowRenderer) {

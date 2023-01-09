@@ -17,7 +17,7 @@ fn main() {
         initialize_map(),
         4,
         8,
-        Player::new((100, 100), 10),
+        Player::new((50, 100), 10),
         initialize_map_colliders(),
     );
 
@@ -32,7 +32,7 @@ fn main() {
             .unwrap();
 
         renderer.clear((120, 120, 120));
-
+        game.draw_walls_3d(&mut renderer);
         game.render_map(&mut renderer, 100, 200);
         game.render_player(&mut renderer);
         game.move_player(&window);

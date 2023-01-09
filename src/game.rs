@@ -1,9 +1,12 @@
+use std::f32::consts::PI;
+
 use crate::Window;
+use crate::renderer::to_color;
 use crate::{renderer, shapes::*};
 use crate::{WindowRenderer, HEIGHT, WIDTH};
 use minifb::*;
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq)]
 pub enum Block {
     Wall,
     Empty,
@@ -138,7 +141,7 @@ impl GameRenderer {
         let direction_vec = vec![self.player.direction.sin(), self.player.direction.cos()];
 
         window
-            .get_keys_pressed(KeyRepeat::Yes)
+            .get_keys_pressed(KeyRepeat::No)
             .iter()
             .for_each(|key| match key {
                 Key::W => {
@@ -169,6 +172,67 @@ impl GameRenderer {
         ));
         render_handle.rect(player_map_sprite, Color::from((200, 0, 0)).rgb);
     }
+
+    pub fn draw_walls_3d(&self, render_handle: &mut WindowRenderer) {    
+        let map_height = 8;
+        let map_width = 4;
+    
+        let depth = 16.0;
+        let fov = PI/6.0;
+
+        for x in 0..WIDTH {
+            // for hver column, udregn den projiterede vinkel til world space
+            let mut ray_angle = (self.player.direction - fov / 2.0) + (x as f32 / WIDTH as f32) * fov;
+    
+            let mut distance_to_wall = 0.0;
+            let mut hit_wall = false;
+    
+            let mut eye_x = ray_angle.sin();
+            let mut eye_y = ray_angle.cos();
+    
+            while hit_wall == false && distance_to_wall < depth {
+                distance_to_wall += 0.1;
+    
+                let mut test_x = (self.player.position.x as f32 + eye_x * distance_to_wall) as i32;
+                let mut test_y = (self.player.position.y as f32 + eye_y * distance_to_wall) as i32;
+    
+                // test om ray er out of bounds
+                if test_x < 0 || test_x >= map_width || test_y < 0 || test_y >= map_height {
+                    hit_wall = true; // sæt distance til max depth
+                    distance_to_wall = depth;
+                } else {
+                    {
+                        if self.map[(test_y * map_width + test_x) as usize] == Block::Wall {
+                            hit_wall = true;
+                        }
+                    }
+                }
+    
+                // calculate distance to ceiling and floor
+                let mut ceiling = (HEIGHT as f32 / 2.0) - (HEIGHT as f32 / distance_to_wall);
+                let mut floor = HEIGHT as f32 - ceiling;
+    
+                for y in 0..HEIGHT {
+                    if y < ceiling as usize {
+                        render_handle.pixel(
+                            (x as i32, y as i32),
+                            (0, 0, 0),
+                        );
+                    } else if y > ceiling as usize && y <= floor as usize {
+                        render_handle.pixel(
+                            (x as i32, y as i32),
+                            (255,255,255),
+                        );
+                    } else {
+                        render_handle.pixel(
+                            (x as i32, y as i32),
+                            (20, 20, 20),
+                        );
+                    }
+                }
+            }
+    }
+}
 }
 
 pub fn initialize_map_colliders() -> Vec<SquareCollider> {
@@ -183,14 +247,14 @@ pub fn initialize_map() -> Vec<Block> {
 
     #[rustfmt::skip]
     let map = vec![
-        w, e, e, e, 
-        e, w, w, w,
-        e, e, e, e,
-        e, e, e, e,
-        e, e, e, e,
-        e, e, e, e,
-        e, e, e, e,
-        e, e, e, w,
+        w, w, w, w, 
+        w, e, e, w,
+        w, e, e, w,
+        w, e, w, w,
+        w, e, e, w,
+        w, e, e, w,
+        w, e, e, w,
+        w, w, w, w,
     ];
 
     return map;

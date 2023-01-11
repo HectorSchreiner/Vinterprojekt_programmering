@@ -1,5 +1,6 @@
-use crate::shapes::*;
 use line_drawing::Bresenham;
+
+use crate::shapes::*;
 
 pub const WIDTH: usize = 600;
 pub const HEIGHT: usize = 600;
@@ -9,11 +10,11 @@ pub fn to_color(color: (u8, u8, u8)) -> u32 {
     (r << 16) | (g << 8) | b
 }
 
-pub struct Renderer {
+pub struct WindowRenderer {
     pub buffer: Vec<u32>,
 }
 
-impl Renderer {
+impl WindowRenderer {
     pub fn pixel<T: Into<Position2D>>(&mut self, position: T, color: (u8, u8, u8)) {
         let position = position.into();
         let x = position.x as usize;
@@ -26,12 +27,12 @@ impl Renderer {
 
     pub fn rect<T: Into<Square>>(&mut self, square: T, color: (u8, u8, u8)) {
         let square = square.into();
-        let pos_y = square.position.y;
-        let pos_x = square.position.x;
+        let pos_y: i32 = square.position.y;
+        let pos_x: i32 = square.position.x;
 
-        for y in pos_y..square.height + pos_y {
-            for x in pos_x..square.lenght + pos_x {
-                self.buffer[(y * WIDTH as u32 + x) as usize] = to_color(color);
+        for y in pos_y..square.height as i32 + pos_y {
+            for x in pos_x..square.length as i32 + pos_x {
+                self.buffer[(y * WIDTH as i32 + x) as usize] = to_color(color);
             }
         }
     }
@@ -41,7 +42,7 @@ impl Renderer {
             (line.pos_1.x as i32, line.pos_1.y as i32),
             (line.pos_2.x as i32, line.pos_2.y as i32),
         ) {
-            self.pixel((x as u32, y as u32), (color.0, color.1, color.2));
+            self.pixel((x, y), (color.0, color.1, color.2));
         }
     }
 

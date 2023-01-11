@@ -1,9 +1,20 @@
-pub struct Position2D {
-    pub x: u32,
-    pub y: u32,
+pub struct Color {
+    pub rgb: (u8, u8, u8)
 }
-impl From<(u32, u32)> for Position2D {
-    fn from(position: (u32, u32)) -> Self {
+
+impl From<(u8, u8, u8)> for Color {
+    fn from(rgb: (u8, u8, u8)) -> Self {
+        Self { rgb: rgb.into() }
+    }
+}
+
+pub struct Position2D {
+    pub x: i32,
+    pub y: i32,
+}
+
+impl From<(i32, i32)> for Position2D {
+    fn from(position: (i32, i32)) -> Self {
         Self {
             x: position.0,
             y: position.1,
@@ -12,14 +23,25 @@ impl From<(u32, u32)> for Position2D {
 }
 
 pub struct Square {
-    pub lenght: u32,
-    pub height: u32,
+    pub length: usize,
+    pub height: usize,
     pub position: Position2D,
 }
-impl<P: Into<Position2D>> From<(u32, u32, P)> for Square {
-    fn from(square: (u32, u32, P)) -> Self {
+
+impl Square {
+    pub fn new(length: usize, height: usize, position: Position2D) -> Self {
         Self {
-            lenght: square.0,
+            length,
+            height,
+            position,
+        }
+    }
+}
+
+impl<P: Into<Position2D>> From<(usize, usize, P)> for Square {
+    fn from(square: (usize, usize, P)) -> Self {
+        Self {
+            length: square.0,
             height: square.1,
             position: square.2.into(),
         }

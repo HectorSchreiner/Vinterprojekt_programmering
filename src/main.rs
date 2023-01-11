@@ -11,6 +11,9 @@ pub fn main() {
     let mut renderer: Renderer = Renderer {
         buffer: vec![0; WIDTH * HEIGHT],
     };
+    // let mut game: Game = Game {
+    //     renderer: &mut renderer
+    // };
 
     let mut window = Window::new("Doom", WIDTH, HEIGHT, WindowOptions::default()).unwrap();
 
@@ -22,8 +25,8 @@ pub fn main() {
             .update_with_buffer(&renderer.buffer, WIDTH, HEIGHT)
             .unwrap();
 
-        renderer.clear((120, 120, 120));
-        game::Game::render_map(&mut renderer, 5, 8, 20);
+        // renderer.clear((120, 120, 120));
+        //game::Game::render_map(&mut renderer, 5, 8, 20);
     }
 }
 

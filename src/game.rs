@@ -142,7 +142,7 @@ impl GameRenderer {
         let direction_vec = vec![self.player.direction.sin(), self.player.direction.cos()];
 
         window
-            .get_keys_pressed(KeyRepeat::No)
+            .get_keys_pressed(KeyRepeat::Yes)
             .iter()
             .for_each(|key| match key {
                 Key::W => {

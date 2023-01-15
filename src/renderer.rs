@@ -1,9 +1,14 @@
 use line_drawing::Bresenham;
 
-use crate::shapes::*;
+use crate::{game::GameRenderer, shapes::*};
 
-pub const WIDTH: usize = 600;
-pub const HEIGHT: usize = 600;
+pub const WIDTH: usize = 1500;
+pub const HEIGHT: usize = 900;
+pub const MAP_WIDTH: i32 = 100;
+pub const MAP_HEIGHT: i32 = 200;
+
+pub const MAP_WIDTH_COUNT: i32 = 8;
+pub const MAP_HEIGHT_COUNT: i32 = 16;
 
 pub fn to_color(color: (u8, u8, u8)) -> u32 {
     let (r, g, b) = (color.0 as u32, color.1 as u32, color.2 as u32);
@@ -27,11 +32,11 @@ impl WindowRenderer {
 
     pub fn rect<T: Into<Square>>(&mut self, square: T, color: (u8, u8, u8)) {
         let square = square.into();
-        let pos_y: i32 = square.position.y;
-        let pos_x: i32 = square.position.x;
+        let pos_y = square.position.y as i32;
+        let pos_x = square.position.x as i32;
 
-        for y in pos_y..square.height as i32 + pos_y {
-            for x in pos_x..square.length as i32 + pos_x {
+        for y in pos_y..(square.height as i32 + pos_y) {
+            for x in pos_x..(square.length as i32 + pos_x) {
                 self.buffer[(y * WIDTH as i32 + x) as usize] = to_color(color);
             }
         }
@@ -42,7 +47,7 @@ impl WindowRenderer {
             (line.pos_1.x as i32, line.pos_1.y as i32),
             (line.pos_2.x as i32, line.pos_2.y as i32),
         ) {
-            self.pixel((x, y), (color.0, color.1, color.2));
+            self.pixel((x as f32, y as f32), (color.0, color.1, color.2));
         }
     }
 
@@ -51,4 +56,11 @@ impl WindowRenderer {
             self.buffer[iter] = to_color(color);
         }
     }
+}
+
+pub fn gamespace_to_screenspace(mut position: Position2D) -> Position2D {
+    position.x *= MAP_WIDTH as f32 / MAP_WIDTH_COUNT as f32;
+    position.y *= MAP_HEIGHT as f32 / MAP_HEIGHT_COUNT as f32;
+
+    return position;
 }

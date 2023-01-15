@@ -8,13 +8,14 @@ impl From<(u8, u8, u8)> for Color {
     }
 }
 
+#[derive(Clone, Copy, PartialEq, Debug)]
 pub struct Position2D {
-    pub x: i32,
-    pub y: i32,
+    pub x: f32,
+    pub y: f32,
 }
 
-impl From<(i32, i32)> for Position2D {
-    fn from(position: (i32, i32)) -> Self {
+impl From<(f32, f32)> for Position2D {
+    fn from(position: (f32, f32)) -> Self {
         Self {
             x: position.0,
             y: position.1,

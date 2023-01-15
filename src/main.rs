@@ -18,9 +18,7 @@ fn main() {
 
     let mut game = GameRenderer::new(
         initialize_map(),
-        4,
-        8,
-        Player::new((50, 100), 10),
+        Player::new((2.0, 2.0), 10),
         initialize_map_colliders(),
     );
 
@@ -36,9 +34,9 @@ fn main() {
 
         renderer.clear((120, 120, 120));
         game.draw_walls_3d(&mut renderer);
-        game.render_map(&mut renderer, 100, 200);
-        game.render_player(&mut renderer);
+        //game.render_map(&mut renderer);
+        //game.render_player(&mut renderer);
         game.move_player(&window);
-        game.render_player_vision(&mut renderer);
+        //game.render_player_vission(&mut renderer);
     }
 }

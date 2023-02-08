@@ -34,15 +34,15 @@ impl<T: Into<Position2D>> From<(T, T)> for SquareCollider {
 #[derive(Clone, Copy, PartialEq, Debug)]
 pub struct Player {
     pub position: Position2D,
-    pub hitbox_size: usize,
+    pub size: usize,
     pub direction: f32,
 }
 
 impl Player {
-    pub fn new<T: Into<Position2D>>(position: T, hitbox_size: usize) -> Self {
+    pub fn new<T: Into<Position2D>>(position: T, size: usize) -> Self {
         Self {
             position: position.into(),
-            hitbox_size,
+            size,
             direction: 0.0,
         }
     }
@@ -64,20 +64,14 @@ impl GameRenderer {
         }
     }
 
-    fn check_collision(self) {
-        let player_x = self.player.position.x;
-        let player_y = self.player.position.y;
-        let player_size = self.player.hitbox_size;
-
-        let test_box: Square = Square::new(2, 2, (2.0, 2.0));
-
-        // check i højre x retning
-        if player_x + player_size > 
-        // check i venstre x retning
-
-        // check i øvre y retning
+    pub fn render_map(
+        &mut self,
+        render_handle: &mut WindowRenderer
+    ) {
         
-        // check i nedre y retning
+    }
+
+    fn check_collision(self) {
        
     }
 
@@ -187,6 +181,62 @@ impl GameRenderer {
 }
 
 pub fn check_collision() {
+
+/*
+let player_x = self.player.position.x;
+let player_y = self.player.position.y;
+let player_size = self.player.hitbox_size;
+ */
+
+let player_x = 5;
+let player_y = 5;
+let player_size = 10;
+
+
+struct Corner {
+    x: usize,
+    y: usize,
+}
+
+let PlayerTopLeft = Corner{x: player_x - player_size/2 , y: player_y - player_size/2};
+let PlayerTopRight = Corner{x: player_x - player_size/2 , y: player_y + player_size/2};
+let PlayerBotLeft = Corner{x: player_x + player_size/2 , y: player_y - player_size/2};
+let PlayerBotRight = Corner{x: player_x + player_size/2 , y: player_y + player_size/2};
+
+
+
+let L = 10;
+let H = 10;
+let pos_x = 5;
+let pos_y = 5;
+//let test_box: Square = Square::new(L, H, ({pos_x},{pos_y}));
+
+let MapTopLeft = Corner{x: pos_x - L/2 , y: pos_y - H/2};
+let MapTopRight = Corner{x: pos_x - L/2 , y: pos_y + H/2};
+let MapBotLeft = Corner{x: pos_x + L/2 , y: pos_y - H/2};
+let MapBotRight = Corner{x: pos_x + L/2 , y: pos_y + H/2};
+
+if(PlayerTopLeft.x <= MapBotRight.x && PlayerTopLeft.x >= MapTopLeft.x && PlayerTopLeft.y <= MapBotRight.y && PlayerTopLeft.y >= MapTopLeft.y){
+    println!("tl2")
+    //return true
+  }
+  
+  if(PlayerBotRight.x <= MapBotRight.x && PlayerBotRight.x >= MapBotLeft.x && PlayerBotRight.y <= MapBotRight.y && PlayerBotRight.y >= MapBotLeft.y){
+    println!("br2")
+    //return true
+  }
+  
+  if(PlayerBotLeft.x <= MapBotRight.x && PlayerBotLeft.x >= MapTopLeft.x && PlayerBotLeft.y <= MapBotRight.y && PlayerBotLeft.y >= MapTopLeft.y){
+    println!("bl2")
+    //return true
+  }
+  
+  if(PlayerTopRight.x <= MapBotRight.x && PlayerTopRight.x >= MapTopLeft.x && PlayerTopRight.y <= MapBotRight.y && PlayerTopRight.y >= MapTopLeft.y){
+    println!("tr2")
+    //return true
+  }
+
+
 
 }
 

@@ -1,5 +1,5 @@
 pub struct Color {
-    pub rgb: (u8, u8, u8)
+    pub rgb: (u8, u8, u8),
 }
 
 impl From<(u8, u8, u8)> for Color {
@@ -22,7 +22,6 @@ impl From<(f32, f32)> for Position2D {
         }
     }
 }
-
 pub struct Square {
     pub length: usize,
     pub height: usize,
@@ -30,11 +29,11 @@ pub struct Square {
 }
 
 impl Square {
-    pub fn new(length: usize, height: usize, position: Position2D) -> Self {
-        Self {
+    pub fn new(length: usize, height: usize, position: impl Into<Position2D>) -> Square {
+        Square {
             length,
             height,
-            position,
+            position: position.into(),
         }
     }
 }

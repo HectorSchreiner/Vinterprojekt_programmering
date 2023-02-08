@@ -57,10 +57,3 @@ impl WindowRenderer {
         }
     }
 }
-
-pub fn gamespace_to_screenspace(mut position: Position2D) -> Position2D {
-    position.x *= MAP_WIDTH as f32 / MAP_WIDTH_COUNT as f32;
-    position.y *= MAP_HEIGHT as f32 / MAP_HEIGHT_COUNT as f32;
-
-    return position;
-}

@@ -1,7 +1,7 @@
 use std::f32::consts::PI;
 
 use crate::Window;
-use crate::renderer::{to_color, MAP_WIDTH, MAP_HEIGHT, gamespace_to_screenspace, MAP_WIDTH_COUNT, MAP_HEIGHT_COUNT};
+use crate::renderer::{to_color, MAP_WIDTH, MAP_HEIGHT, MAP_WIDTH_COUNT, MAP_HEIGHT_COUNT};
 use crate::{renderer, shapes::*};
 use crate::{WindowRenderer, HEIGHT, WIDTH};
 use minifb::*;
@@ -34,15 +34,15 @@ impl<T: Into<Position2D>> From<(T, T)> for SquareCollider {
 #[derive(Clone, Copy, PartialEq, Debug)]
 pub struct Player {
     pub position: Position2D,
-    pub size: usize,
+    pub hitbox_size: usize,
     pub direction: f32,
 }
 
 impl Player {
-    pub fn new<T: Into<Position2D>>(position: T, size: usize) -> Self {
+    pub fn new<T: Into<Position2D>>(position: T, hitbox_size: usize) -> Self {
         Self {
             position: position.into(),
-            size,
+            hitbox_size,
             direction: 0.0,
         }
     }
@@ -64,14 +64,20 @@ impl GameRenderer {
         }
     }
 
-    pub fn render_map(
-        &mut self,
-        render_handle: &mut WindowRenderer
-    ) {
-        
-    }
-
     fn check_collision(self) {
+        let player_x = self.player.position.x;
+        let player_y = self.player.position.y;
+        let player_size = self.player.hitbox_size;
+
+        let test_box: Square = Square::new(2, 2, (2.0, 2.0));
+
+        // check i højre x retning
+        if player_x + player_size > 
+        // check i venstre x retning
+
+        // check i øvre y retning
+        
+        // check i nedre y retning
        
     }
 

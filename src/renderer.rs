@@ -7,7 +7,7 @@ pub const HEIGHT: usize = 900;
 pub const MAP_WIDTH: i32 = 100;
 pub const MAP_HEIGHT: i32 = 200;
 
-pub const MAP_WIDTH_COUNT: i32 = 8;
+pub const MAP_WIDTH_COUNT: i32 = 16;
 pub const MAP_HEIGHT_COUNT: i32 = 16;
 
 pub fn to_color(color: (u8, u8, u8)) -> u32 {

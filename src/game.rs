@@ -71,10 +71,6 @@ impl GameRenderer {
         
     }
 
-    fn check_collision(self) {
-       
-    }
-
     pub fn move_player(&mut self, window: &Window) {
         let player_speed = 0.15;
         let rotation_speed = 0.1;
@@ -182,61 +178,51 @@ impl GameRenderer {
 
 pub fn check_collision() {
 
-/*
-let player_x = self.player.position.x;
-let player_y = self.player.position.y;
-let player_size = self.player.hitbox_size;
- */
+    struct Square {
+    x: i32,
+    y: i32,
+    side_length: i32,
+    }
 
-let player_x = 5;
-let player_y = 5;
-let player_size = 10;
+    impl Square {
+    fn intersects(&self, other: &Square) -> bool{
+        let corners = [
+            (self.x, self.y),
+            (self.x + self.side_length, self.y),
+            (self.x, self.y + self.side_length),
+            (self.x + self.side_length, self.y + self.side_length),
+        ];
+        for &(x, y) in corners.iter() {
+            if x >= other.x && x <= other.x + other.side_length && y >= other.y && y <= other.y + other.side_length
+            {
+                return true
+            }
+        }
+        return false
+    }
+    }
 
-
-struct Corner {
-    x: usize,
-    y: usize,
-}
-
-let PlayerTopLeft = Corner{x: player_x - player_size/2 , y: player_y - player_size/2};
-let PlayerTopRight = Corner{x: player_x - player_size/2 , y: player_y + player_size/2};
-let PlayerBotLeft = Corner{x: player_x + player_size/2 , y: player_y - player_size/2};
-let PlayerBotRight = Corner{x: player_x + player_size/2 , y: player_y + player_size/2};
-
-
-
-let L = 10;
-let H = 10;
-let pos_x = 5;
-let pos_y = 5;
-//let test_box: Square = Square::new(L, H, ({pos_x},{pos_y}));
-
-let MapTopLeft = Corner{x: pos_x - L/2 , y: pos_y - H/2};
-let MapTopRight = Corner{x: pos_x - L/2 , y: pos_y + H/2};
-let MapBotLeft = Corner{x: pos_x + L/2 , y: pos_y - H/2};
-let MapBotRight = Corner{x: pos_x + L/2 , y: pos_y + H/2};
-
-if(PlayerTopLeft.x <= MapBotRight.x && PlayerTopLeft.x >= MapTopLeft.x && PlayerTopLeft.y <= MapBotRight.y && PlayerTopLeft.y >= MapTopLeft.y){
-    println!("tl2")
-    //return true
-  }
-  
-  if(PlayerBotRight.x <= MapBotRight.x && PlayerBotRight.x >= MapBotLeft.x && PlayerBotRight.y <= MapBotRight.y && PlayerBotRight.y >= MapBotLeft.y){
-    println!("br2")
-    //return true
-  }
-  
-  if(PlayerBotLeft.x <= MapBotRight.x && PlayerBotLeft.x >= MapTopLeft.x && PlayerBotLeft.y <= MapBotRight.y && PlayerBotLeft.y >= MapTopLeft.y){
-    println!("bl2")
-    //return true
-  }
-  
-  if(PlayerTopRight.x <= MapBotRight.x && PlayerTopRight.x >= MapTopLeft.x && PlayerTopRight.y <= MapBotRight.y && PlayerTopRight.y >= MapTopLeft.y){
-    println!("tr2")
-    //return true
-  }
+    fn check_squares(squares: &[Square], square_to_check: &Square) -> bool {
+    for square in squares {
+        if square.intersects(square_to_check) {
+            return true;
+        }
+    }
+    false
+    }
 
 
+    fn run_program() {
+    let squares = vec![
+        Square { x: 0, y: 0, side_length: 10 },
+        Square { x: -10, y: -10, side_length: 10 },
+    ];
+    let square_to_check = Square { x: -0, y: -0, side_length: 0 };
+    match check_squares(&squares, &square_to_check) {
+        true => println!("Intersect"),
+        false => println!("Intersect"),
+    }
+    }
 
 }
 

@@ -31,5 +31,6 @@ fn main() {
         renderer.clear((120, 120, 120));
         game.draw_walls_3d(&mut renderer);
         game.move_player(&window);
+        game::GameRenderer::check_collision();
     }
 }

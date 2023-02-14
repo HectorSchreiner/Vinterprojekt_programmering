@@ -177,6 +177,8 @@ impl GameRenderer {
 }
 
 pub fn check_collision() {
+     
+     //test 1
 
     struct Square {
     x: i32,

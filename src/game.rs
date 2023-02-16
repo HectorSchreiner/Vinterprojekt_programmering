@@ -13,24 +13,6 @@ pub enum Block {
     Empty,
 }
 
-pub struct Enemy {
-
-}
-
-pub struct SquareCollider {
-    top_left_corner: Position2D,
-    bottom_right_corner: Position2D,
-}
-
-impl<T: Into<Position2D>> From<(T, T)> for SquareCollider {
-    fn from(coordinates: (T, T)) -> Self {
-        Self {
-            top_left_corner: coordinates.0.into(),
-            bottom_right_corner: coordinates.1.into(),
-        }
-    }
-}
-
 #[derive(Clone, Copy, PartialEq, Debug)]
 pub struct Player {
     pub position: Position2D,
@@ -70,60 +52,6 @@ impl GameRenderer {
     ) {
         
     }
-
-    pub fn check_collision() {
-        //test 1
-   
-       struct Square {
-       x: i32,
-       y: i32,
-       side_length: i32,
-       }
-   
-       impl Square {
-       fn intersects(&self, other: &Square) -> bool{
-           let corners = [
-               (self.x, self.y),
-               (self.x + self.side_length, self.y),
-               (self.x, self.y + self.side_length),
-               (self.x + self.side_length, self.y + self.side_length),
-           ];
-           for &(x, y) in corners.iter() {
-               if x >= other.x && x <= other.x + other.side_length && y >= other.y && y <= other.y + other.side_length
-               {
-                   return true
-               }
-           }
-           return false
-       }
-       }
-   
-       fn check_squares(squares: &[Square], square_to_check: &Square) -> bool {
-       for square in squares {
-           if square.intersects(square_to_check) {
-               return true;
-           }
-       }
-       return false
-       }
-   
-   
-       fn run_program() {
-       let squares = vec![
-           Square { x: 15, y: 15, side_length: 10 },
-           Square { x: -15, y: -15, side_length: 10 },
-       ];
-       let square_to_check = Square { x: -0, y: -0, side_length: 0 };
-       match check_squares(&squares, &square_to_check) {
-           true => println!("Intersect"),
-           false => println!("Dont Intersect"),
-       }
-       }
-
-       run_program() 
-   
-   }
-   
 
     pub fn move_player(&mut self, window: &Window) {
         let player_speed = 0.15;

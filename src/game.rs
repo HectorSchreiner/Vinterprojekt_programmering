@@ -72,8 +72,7 @@ impl GameRenderer {
     }
 
     pub fn check_collision() {
-        //test 1
-   
+        
        struct Square {
        x: i32,
        y: i32,
@@ -97,13 +96,13 @@ impl GameRenderer {
            return false
        }
        }
-   
+       
        fn check_squares(squares: &[Square], square_to_check: &Square) -> bool {
        for square in squares {
            if square.intersects(square_to_check) {
                return true;
-           }
-       }
+            }
+        }
        return false
        }
    
@@ -119,6 +118,10 @@ impl GameRenderer {
            false => println!("Dont Intersect"),
        }
        }
+
+       //1. calculate movement
+       //2. calcutlate colision
+       //3. move player if no colision
 
        run_program() 
    

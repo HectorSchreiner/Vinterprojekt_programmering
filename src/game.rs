@@ -1,3 +1,4 @@
+use std::array;
 use std::f32::consts::PI;
 
 use crate::Window;
@@ -11,24 +12,6 @@ use minifb::*;
 pub enum Block {
     Wall,
     Empty,
-}
-
-pub struct Enemy {
-
-}
-
-pub struct SquareCollider {
-    top_left_corner: Position2D,
-    bottom_right_corner: Position2D,
-}
-
-impl<T: Into<Position2D>> From<(T, T)> for SquareCollider {
-    fn from(coordinates: (T, T)) -> Self {
-        Self {
-            top_left_corner: coordinates.0.into(),
-            bottom_right_corner: coordinates.1.into(),
-        }
-    }
 }
 
 #[derive(Clone, Copy, PartialEq, Debug)]
@@ -71,62 +54,73 @@ impl GameRenderer {
         
     }
 
-    pub fn check_collision() {
-        
-       struct Square {
-       x: i32,
-       y: i32,
-       side_length: i32,
-       }
-   
-       impl Square {
-       fn intersects(&self, other: &Square) -> bool{
-           let corners = [
-               (self.x, self.y),
-               (self.x + self.side_length, self.y),
-               (self.x, self.y + self.side_length),
-               (self.x + self.side_length, self.y + self.side_length),
-           ];
-           for &(x, y) in corners.iter() {
-               if x >= other.x && x <= other.x + other.side_length && y >= other.y && y <= other.y + other.side_length
-               {
-                   return true
-               }
-           }
-           return false
-       }
-       }
-       
-       fn check_squares(squares: &[Square], square_to_check: &Square) -> bool {
-       for square in squares {
-           if square.intersects(square_to_check) {
-               return true;
+    // tjekker om player kan bevæge sig og returnerer enten sandt eller falsk
+    pub fn check_player_move(&mut self, direction: i32, player_speed: f32) -> bool {
+        let direction_vec = vec![self.player.direction.sin(), self.player.direction.cos()];
+
+        let mut collides = false;
+
+        let wall_hitbox_arr = initialize_map_hitboxes();
+        // frem
+        if direction == 1 {
+            let future_pos: SquareHitbox = SquareHitbox { 
+                x: self.player.position.x + (player_speed * direction_vec[0]), 
+                y: self.player.position.y + (player_speed * direction_vec[1]), 
+                sideLength: 1.0 
+            };
+            // hvis rammer return true
+            if check_player_collision(&wall_hitbox_arr, &future_pos) {
+                println!("collision");
+                collides = true;
             }
         }
-       return false
-       }
-   
-   
-       fn run_program() {
-       let squares = vec![
-           Square { x: 15, y: 15, side_length: 10 },
-           Square { x: -15, y: -15, side_length: 10 },
-       ];
-       let square_to_check = Square { x: -0, y: -0, side_length: 0 };
-       match check_squares(&squares, &square_to_check) {
-           true => println!("Intersect"),
-           false => println!("Dont Intersect"),
-       }
-       }
 
-       //1. calculate movement
-       //2. calcutlate colision
-       //3. move player if no colision
+        // tilbage
+        if direction == 2 {
+            let future_pos: SquareHitbox = SquareHitbox { 
+                x: self.player.position.x - (player_speed * direction_vec[0]), 
+                y: self.player.position.y - (player_speed * direction_vec[1]), 
+                sideLength: 1.0 
+            };
+            // hvis rammer return false
+            if check_player_collision(&wall_hitbox_arr, &future_pos) {
+                println!("collision");
 
-       run_program() 
-   
-   }
-   
+                collides = true;
+            }
+        }
+
+        // venstre
+        if direction == 3 {
+            let future_pos: SquareHitbox = SquareHitbox { 
+                x: self.player.position.x - (player_speed * direction_vec[1]), 
+                y: self.player.position.y + (player_speed * direction_vec[0]), 
+                sideLength: 1.0 
+            };
+            // hvis rammer return false
+            if check_player_collision(&wall_hitbox_arr, &future_pos) {
+                println!("collision");
+
+                collides = true;
+            }
+        }
+
+        // højre
+        if direction == 4 {
+            let future_pos: SquareHitbox = SquareHitbox { 
+                x: self.player.position.x + (player_speed * direction_vec[1]), 
+                y: self.player.position.y - (player_speed * direction_vec[0]), 
+                sideLength: 1.0 
+            };
+            // hvis rammer return false
+            if check_player_collision(&wall_hitbox_arr, &future_pos) {
+                println!("collision");
+                collides = true;
+            }
+        }
+
+        collides
+    }
 
     pub fn move_player(&mut self, window: &Window) {
         let player_speed = 0.15;
@@ -139,22 +133,32 @@ impl GameRenderer {
             .for_each(|key| match key {
                 //forward backward
                 Key::W => {
+                    if !self.check_player_move(1, player_speed) {
                     self.player.position.x += (player_speed * direction_vec[0]);
                     self.player.position.y += (player_speed * direction_vec[1]);
+                    }
+                    
                 }
                 Key::S => {
+                    if !self.check_player_move(2, player_speed) {
                     self.player.position.x -= (player_speed * direction_vec[0]);
                     self.player.position.y -= (player_speed * direction_vec[1]);
+                    }
                 }
                 //strafe
                 Key::A => {
+                    if !self.check_player_move(3, player_speed) {
                     self.player.position.x -= (player_speed * direction_vec[1]);
                     self.player.position.y += (player_speed * direction_vec[0]);
+                    }
                 }
                 Key::D => {
+                    if !self.check_player_move(4, player_speed) {
                     self.player.position.x += (player_speed * direction_vec[1]);
                     self.player.position.y -= (player_speed * direction_vec[0]);
+                    }
                 }
+
                 //rotate
                 Key::J => {
                     self.player.direction -= rotation_speed;
@@ -260,3 +264,64 @@ pub fn initialize_map() -> Vec<Block> {
 
     map
 }
+
+pub fn initialize_map_hitboxes() -> Vec<SquareHitbox> {
+    let map_array: Vec<Block> = initialize_map();
+    let mut hitbox_array: Vec<SquareHitbox> = vec![];
+
+    fn position(array_index: usize) -> Position2D {
+        let x = (array_index as i32 % MAP_WIDTH_COUNT);
+        let y = (array_index as i32 / MAP_HEIGHT_COUNT);
+
+        Position2D { x: x as f32, y: y as f32 }
+    }
+    
+    for (i, item) in map_array.iter().enumerate() {
+        if *item == Block::Wall {
+            hitbox_array.push(SquareHitbox { x: position(i).x, y: position(i).y, sideLength: 1.0 })
+        }
+    }
+
+    return hitbox_array;
+}
+
+#[derive(Clone, Copy, PartialEq, Debug)]
+pub struct SquareHitbox {
+    x: f32,
+    y: f32,
+    sideLength: f32,
+}
+
+impl SquareHitbox {
+
+    // tjekker om self collider med otherHitbox
+    pub fn self_intersects(&self, otherHitbox: &SquareHitbox) -> bool {
+        let corners = [
+            (self.x, self.y),
+            (self.x + self.sideLength, self.y),
+            (self.x, self.y + self.sideLength),
+            (self.x + self.sideLength, self.y + self.sideLength),
+        ];
+        for &(x, y) in corners.iter() {
+            if x >= otherHitbox.x
+                && x <= otherHitbox.x + otherHitbox.sideLength
+                && y >= otherHitbox.y
+                && y <= otherHitbox.y + otherHitbox.sideLength
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+// tjekker om player collider med en mur i wall array
+pub fn check_player_collision(wallHitboxArr: &[SquareHitbox], playerHitbox: &SquareHitbox) -> bool {
+    for square in wallHitboxArr {
+        if square.self_intersects(playerHitbox) {
+            return true;
+        }
+    }
+    return false;
+}
+

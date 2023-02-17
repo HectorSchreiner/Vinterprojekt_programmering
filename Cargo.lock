@@ -9,6 +9,7 @@ dependencies = [
  "image",
  "line_drawing",
  "minifb",
+ "round",
 ]
 
 [[package]]
@@ -732,6 +733,12 @@ checksum = "3acd125665422973a33ac9d3dd2df85edad0f4ae9b00dafb1a05e43a9f5ef8e7"
 dependencies = [
  "winapi",
 ]
+
+[[package]]
+name = "round"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b02705db4fa872ae37e464fc803b7ffa574e6c4a5e112c52a82550f9dd63b657"
 
 [[package]]
 name = "scoped-tls"

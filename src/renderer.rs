@@ -20,7 +20,8 @@ pub struct WindowRenderer {
 }
 
 impl WindowRenderer {
-    pub fn pixel<T: Into<Position2D>>(&mut self, position: T, color: (u8, u8, u8)) {
+    pub fn pixel<T>(&mut self, position: T, color: (u8, u8, u8))
+    where T: Into<Position2D> {
         let position = position.into();
         let x = position.x as usize;
         let y = position.y as usize;

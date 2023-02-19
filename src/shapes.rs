@@ -4,7 +4,7 @@ pub struct Color {
 
 impl From<(u8, u8, u8)> for Color {
     fn from(rgb: (u8, u8, u8)) -> Self {
-        Self { rgb: rgb.into() }
+        Self { rgb }
     }
 }
 
@@ -63,6 +63,7 @@ impl Line {
     pub fn length_of_line(&self) -> f32 {
         let dx: f32 = (self.pos_1.x as f32 - self.pos_2.x as f32).abs();
         let dy: f32 = (self.pos_1.y as f32 - self.pos_2.y as f32).abs();
-        return (dx * dx + dy * dy).powf(0.5);
+        
+        (dx * dx + dy * dy).powf(0.5)
     }
 }

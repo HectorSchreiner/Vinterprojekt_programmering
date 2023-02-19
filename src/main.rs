@@ -2,7 +2,6 @@ use minifb::*;
 
 use crate::game::*;
 use crate::renderer::*;
-use crate::shapes::*;
 
 mod game;
 mod renderer;
